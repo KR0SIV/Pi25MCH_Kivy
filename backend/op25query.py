@@ -1,15 +1,12 @@
 import requests
 import json
-
-uri = 'http://192.168.122.25'
-port = 8080
-
-#print(uri + ':' + str(port))
-
 def jsoncmd(command, arg1, arg2):
+    uri = 'http://192.168.122.25'
+    port = 8080
     return requests.post(uri + ':' + str(port), json=[{"command": command, "arg1": int(arg1), "arg2": int(arg2)}])
 
-def queryserver():
+
+def queryserver(widget):
     while True:
         try:
             r = jsoncmd("update", 0, 0)
@@ -20,7 +17,7 @@ def queryserver():
         if data == []:
             pass
         else:
-            #print(data)
+            # print(data)
             for i in data:
                 try:
                     nac = str(hex(data[0]['nac']))
@@ -67,15 +64,10 @@ def queryserver():
                     frequencies = ''
                     tsbks = ''
 
-                result = {"nac":nac, "rawnac":rawnac,"wacn":wacn,"system":system,"sysid":sysid,"tag":tag,"tgid":tgid,"offset":offset,"freq":freq,
-                          "grpaddr":grpaddr,"enc":enc,"srcaddr":srcaddr,"rxchan":rxchan,"rfid":rfid,"stid":stid,"secondary":secondary,"adjacent_data":adjacent_data,"frequencies":frequencies,
-                          "tsbks":tsbks,"txchan":txchan}
-        try:
-            return result
-        except:
-            return {}
-
-
-
-#queryserver()
-
+                result = {"nac": nac, "rawnac": rawnac, "wacn": wacn, "system": system, "sysid": sysid, "tag": tag,
+                          "tgid": tgid, "offset": offset, "freq": freq,
+                          "grpaddr": grpaddr, "enc": enc, "srcaddr": srcaddr, "rxchan": rxchan, "rfid": rfid,
+                          "stid": stid, "secondary": secondary, "adjacent_data": adjacent_data,
+                          "frequencies": frequencies,
+                          "tsbks": tsbks, "txchan": txchan}
+                widget.ids.scanner_tag_label.text = str(result['tag'])
