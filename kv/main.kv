@@ -4,7 +4,17 @@
 #:import MDTabsBar kivymd.uix.tab.MDTabsBar
 
 
+<SettingsURI>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "120dp"
 
+    MDTextField:
+        hint_text: "City"
+
+    MDTextField:
+        hint_text: "Street"
 
 BoxLayout:
     orientation: 'vertical'
@@ -18,65 +28,82 @@ BoxLayout:
                     name: 'Scanner'
                     text: "SCAN"
                     icon: "radio"
-                    GridLayout:#Main Layout or 'frame'
-                        cols: 2
-                        BoxLayout:#Top Left
-                            orientation: 'vertical'
-                            #anchor_x: 'left'
-                            #anchor_y: 'top'
-                            #spacing: dp(3)
+                    BoxLayout:#Main Layout or 'frame'
+                        orientation: 'vertical'
+                        #cols: 2
+                        AnchorLayout:
+                            #orientation: 'vertical'
+                            anchor_y: 'top'
                             MDLabel:
-                                id: scanner_sdr_label
+                                id: scanner_topbar_label
                                 font_style: 'Body1'
                                 theme_text_color: 'Primary'
                                 text: "SDR:RTL  |  LNA:49  |  SR:2.0e6  |  Placeholder"
-                                #size_hint: (1, 1)
-                                #halign: 'justify'
-                            MDLabel:
-                                id: scanner_tag_label
-                                font_style: 'Body1'
-                                font_size: sp(50)
-                                theme_text_color: 'Primary'
-                                text: "Connecting..."
-                                #size_hint: (1, 0.2)
-                                #halign: 'left'
-                            MDLabel:
-                                id: scanner_system_label
-                                font_style: 'Body1'
-                                font_size: sp(35)
-                                theme_text_color: 'Primary'
-                                text: ""
-                                #size_hint: (1, None)
-                                #valign: 'top'
-                            MDLabel:
-                                id: scanner_srcgrp_label
-                                font_style: 'Body1'
-                                theme_text_color: 'Primary'
-                                text: ""
-                                #size_hint: (1, 0.01)
-                                #halign: 'left'
-                        BoxLayout:#Top Right
+                                size_hint: (1, 0.3)
+                                halign: 'left'
+                                valign: 'top'
+                        BoxLayout:#Top Left
                             orientation: 'horizontal'
-                            MDLabel:
-                                font_style: 'Body1'
-                                theme_text_color: 'Primary'
-                                text: "Top Right Frame"
-                                halign: 'center'
-                        BoxLayout:#Bottom Left
+                            #anchor_x: 'left'
+                            #anchor_y: 'top'
+                            #spacing: dp(3)
+                            BoxLayout:#Top Left
+                                orientation: 'vertical'
+                                MDLabel:
+                                    id: scanner_tag_label
+                                    font_style: 'Body1'
+                                    font_size: sp(50)
+                                    theme_text_color: 'Primary'
+                                    text: "Connecting..."
+                                    #size_hint: (1, 0.2)
+                                    #halign: 'left'
+                                MDLabel:
+                                    id: scanner_system_label
+                                    font_style: 'Body1'
+                                    font_size: sp(35)
+                                    theme_text_color: 'Primary'
+                                    text: ""
+                                    #size_hint: (1, None)
+                                    #valign: 'top'
+                                MDLabel:
+                                    id: scanner_srcgrp_label
+                                    font_style: 'Body1'
+                                    theme_text_color: 'Primary'
+                                    text: ""
+                                    #size_hint: (1, 0.01)
+                                    #halign: 'left'
+                            BoxLayout:#Top Left
+                                orientation: 'vertical'
+                                MDLabel:
+                                    #id: scanner_tag_label
+                                    font_style: 'Body1'
+                                    font_size: sp(50)
+                                    theme_text_color: 'Primary'
+                                    text: "Right Side"
+                                    #size_hint: (1, 0.2)
+                                    #halign: 'left'
+                        BoxLayout:#Bottom Bar
                             orientation: 'horizontal'
-                            MDLabel:
-                                font_style: 'Body1'
-                                theme_text_color: 'Primary'
-                                text: "Bottom Left Frame"
-                                halign: 'center'
-                        BoxLayout:#Bottom Right
-                            orientation: 'horizontal'
-                            MDLabel:
-                                font_style: 'Body1'
-                                theme_text_color: 'Primary'
-                                text: "Bottom Right Frame"
-                                halign: 'center'
-
+                            anchor_y: 'bottom'
+                            MDRaisedButton:
+                                text: "HOLD"
+                                theme_text_color: "Primary"
+                                text_color: 0, 0, 1, 1
+                                size_hint: (1, .75)
+                                text_size: sp(100)
+                                on_press: app.buttons.hold(self, tg=scanner_srcgrp_label.text)
+                            MDRaisedButton:
+                                text: "SKIP"
+                                theme_text_color: "Primary"
+                                text_color: 0, 0, 1, 1
+                                size_hint: (1, .75)
+                                on_press: app.buttons.skip(self, tg=scanner_srcgrp_label.text)
+                            MDRaisedButton:
+                                text: "LOCKOUT"
+                                theme_text_color: "Primary"
+                                text_color: 0, 0, 1, 1
+                                size_hint: (1, .75)
+                                on_press: app.buttons.lockout(self, tg=scanner_srcgrp_label.text)
                 MDBottomNavigationItem:
                     name: 'Logs'
                     text: "LOGS"
@@ -94,10 +121,19 @@ BoxLayout:
                                     text: ''
                                     font_size: sp(20)
                                     text_size: self.width, None
+                                    theme_text_color: 'Primary'
                                     size_hint_y: None
                                     height: self.texture_size[1]
                             Tab:
                                 text: 'System Log'
+                                MDLabel:
+                                    id: log_sys_label
+                                    text: ''
+                                    font_size: sp(20)
+                                    text_size: self.width, None
+                                    theme_text_color: 'Primary'
+                                    size_hint_y: None
+                                    height: self.texture_size[1]
                             Tab:
                                 text: 'Raw OP25 Log*'
                 MDBottomNavigationItem:
@@ -117,8 +153,10 @@ BoxLayout:
                     text: "SETTINGS"
                     icon: 'tune'
                     id: bottom_navigation_desktop_2
-                    MDLabel:
-                        font_style: 'Body1'
-                        theme_text_color: 'Primary'
-                        text: "Cheese!"
-                        halign: 'center'
+                    FloatLayout:
+                        MDRaisedButton:
+                            font_style: 'Body1'
+                            theme_text_color: 'Primary'
+                            text: "Op25 URL: "
+                            size_hint: (1, None)
+                            on_release: app.show_confirmation_dialog()

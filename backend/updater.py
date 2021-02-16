@@ -19,6 +19,7 @@ def queryserver(widget):
             data = json.loads(r.content)
         except:
             data = []
+            widget.ids.scanner_tag_label.text = 'Connecting...'
 
         if data == []:
             pass
@@ -67,7 +68,7 @@ def queryserver(widget):
                     rxchan = ''
                     txchan = ''
                     rfid = ''
-                    stid = ''
+                    stid = '0'
                     secondary = ''
                     adjacent_data = ''
                     frequencies = ''
@@ -82,15 +83,22 @@ def queryserver(widget):
                           "stid": stid, "secondary": secondary, "adjacent_data": adjacent_data,
                           "frequencies": frequencies,"tsbks": tsbks, "txchan": txchan}
 
+
                 ##Only update the display and call log if there is a valid ID for each field
                 if grpaddr != '0' and srcaddr != '0':
                     widget.ids.scanner_tag_label.text = str(tag)
                     widget.ids.scanner_srcgrp_label.text = str('Radio ID: ' + srcaddr + '\r\n' + 'TalkGroup ID: ' + grpaddr)
                     widget.ids.scanner_system_label.text = str(system)
-
                     ##Call Logging
                     lastTag = callLog(lastTag, tag, result, widget)#Return the tag so you can assign it in your update loop
                 else:
                     widget.ids.scanner_tag_label.text = 'Scanning...'
                     widget.ids.scanner_srcgrp_label.text = 'Radio ID: 0\r\nTalkGroup ID: 0'
+
+                ##Top right frame, Site Information
+                if stid != '0':
+                    widget.ids.scanner_topbar_label.text =\
+                        'NAC: ' + nac + ' | ' +\
+                        'WACN: ' + wacn + ' | ' +\
+                        'SYSID: ' + sysid
 
