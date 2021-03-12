@@ -2,13 +2,23 @@ import requests
 import json
 import time
 from backend.logging import callLog
+from kivy.config import ConfigParser
+from kivy.utils import platform
+from kivy.logger import Logger
+import os.path
 
+config = ConfigParser()
 
 
 def jsoncmd(command, arg1, arg2):
-    uri = 'http://192.168.122.25'
-    port = 8080
-    return requests.post(uri + ':' + str(port), json=[{"command": command, "arg1": int(arg1), "arg2": int(arg2)}])
+    if (platform == 'win'):
+        config.read(os.getcwd() + '/pi25mch.ini')
+    if (platform == 'android'):
+        config.read(os.getcwd() + '/../.pi25mch.ini')
+    uri = config.get('OP25', 'uri')
+    #uri = 'http://192.168.122.25'
+    #port = 8080
+    return requests.post(uri, json=[{"command": command, "arg1": int(arg1), "arg2": int(arg2)}])
 
 
 def queryserver(widget):
@@ -17,9 +27,11 @@ def queryserver(widget):
         try:
             r = jsoncmd("update", 0, 0)
             data = json.loads(r.content)
-        except:
+        except Exception as e:
             data = []
             widget.ids.scanner_tag_label.text = 'Connecting...'
+            Logger.error(str(e))
+            Logger.error(os.getcwd() + '/../.pi25mch.ini')
 
         if data == []:
             pass
